@@ -35,22 +35,24 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_plugins_1 = require("@expo/config-plugins");
 const fs_extra_1 = require("fs-extra");
-const path = __importStar(require("node:path"));
+const path = __importStar(require("path"));
 function withCustomAssetsAndroid(config, props) {
     const { assetsPaths, ignoredPattern } = props;
     return (0, config_plugins_1.withDangerousMod)(config, [
         "android",
         async (config) => {
             const { projectRoot } = config.modRequest;
-            const resDir = path.join(projectRoot, "android", "app", "src", "main", "res");
-            const rawDir = path.join(resDir, "raw");
-            (0, fs_extra_1.ensureDirSync)(rawDir);
+            const resDir = path.join(projectRoot, "android", "app", "src", "main");
+            const assetsDir = path.join(resDir, "assets");
+            (0, fs_extra_1.ensureDirSync)(assetsDir);
             for (const assetSourceDir of assetsPaths) {
                 const assetSourcePath = path.join(projectRoot, assetSourceDir);
-                const assetFiles = (await (0, fs_extra_1.readdir)(assetSourcePath)).filter(file => ignoredPattern === undefined ? true : !file.match(new RegExp(ignoredPattern)));
+                const assetFiles = (await (0, fs_extra_1.readdir)(assetSourcePath)).filter((file) => ignoredPattern === undefined
+                    ? true
+                    : !file.match(new RegExp(ignoredPattern)));
                 for (const assetFile of assetFiles) {
                     const srcAssetPath = path.join(assetSourcePath, assetFile);
-                    const destAssetPath = path.join(rawDir, assetFile);
+                    const destAssetPath = path.join(assetsDir, assetFile);
                     (0, fs_extra_1.copyFileSync)(srcAssetPath, destAssetPath);
                 }
             }
@@ -68,7 +70,9 @@ function withCustomAssetsIos(config, props) {
         for (const assetSourceDir of assetsPaths) {
             const assetSourcePath = path.join(projectRoot, assetSourceDir);
             // const assetFiles = await readdir(assetSourcePath);
-            const assetFiles = (await (0, fs_extra_1.readdir)(assetSourcePath)).filter(file => ignoredPattern === undefined ? true : !file.match(new RegExp(ignoredPattern)));
+            const assetFiles = (await (0, fs_extra_1.readdir)(assetSourcePath)).filter((file) => ignoredPattern === undefined
+                ? true
+                : !file.match(new RegExp(ignoredPattern)));
             const project = config.modResults;
             const groupName = "Assets";
             for (const assetFile of assetFiles) {

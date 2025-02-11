@@ -7,7 +7,7 @@ import {
 } from "@expo/config-plugins";
 import type { ExpoConfig } from "@expo/config-types";
 import { copyFileSync, ensureDirSync, readdir } from "fs-extra";
-import * as path from "node:path";
+import * as path from "path";
 
 function withCustomAssetsAndroid(
   config: ExpoConfig,
